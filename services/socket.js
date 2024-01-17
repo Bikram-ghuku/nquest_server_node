@@ -29,11 +29,20 @@ class SocketService {
             socket.on('disconnect', () => {
                 console.log('user disconnected', socket.id);
             });
+
             socket.on("system_online", (data) => {
                 console.log("System online: ",data);
                 io.to(data.socket_id).emit("userData", offuser);
                 console.log("Sent data: ",data.socket_id);
             });
+        });
+
+        io.on('disconnect', () => {
+            console.log('user disconnected', socket.id);
+        });
+        
+        io.sockets.on("status" , (data) => {
+            console.log("Status update received : ",data);
         });
     }
 }
