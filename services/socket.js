@@ -1,12 +1,12 @@
 const { Server } = require('socket.io');
 
 class SocketService {
-    constructor() {
-        this.io = new Server();
-    }
-    
-    init(server) {
-        this.io.attach(server);
+    constructor(server) {
+        this.io = new Server(server, {
+            cors: {
+                origin: '*',
+            }
+        });
     }
     
     getIO() {
@@ -20,8 +20,8 @@ class SocketService {
             socket.on('disconnect', () => {
                 console.log('user disconnected', socket.id);
             });
-            socket.on("event:message", (data) => {
-                console.log("New Chat msg: ",data);
+            socket.on("system_online", (data) => {
+                console.log("System online: ",data);
             });
         });
     }
