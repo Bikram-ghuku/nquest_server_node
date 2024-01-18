@@ -15,5 +15,10 @@
     "express.js": "^1.0.0",
     "http": "^0.0.1-security",
     "socket.io": "^4.7.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.5",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
   }
 }
