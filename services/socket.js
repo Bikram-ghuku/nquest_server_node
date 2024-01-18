@@ -1,4 +1,6 @@
 const { Server } = require('socket.io');
+const DbService = require('./db')
+
 const offuser = {
     "lab_no": "L001",
     "system_id": "C001",
@@ -8,7 +10,7 @@ const offuser = {
     "exam_name": "ONLINE EXAM",
     "loginAllowed": false,
 }
-
+const db = new DbService()
 
 class SocketService {
     constructor(server) {
@@ -33,8 +35,11 @@ class SocketService {
 
             socket.on("system_online", (data) => {
                 console.log("System online: ",data);
-                io.to(data.socket_id).emit("userData", offuser);
-                console.log("Sent data: ",data.socket_id);
+                db.addUpdateSystem(data).then(() => {
+                    io.to(data.socket_id).emit("userData", offuser);
+                    console.log("Sent data: ",data.socket_id);
+                });
+                
             });
         });
 
