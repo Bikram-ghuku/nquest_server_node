@@ -19,8 +19,13 @@ sockerService.initListeners();
 
 app.use('/api', userDataRoute);
 app.get('/api/', (req, res) => {
-    sockerService.getIO().emit('alertMsg', 'Hello from server');
-    res.status(200).send('Hello World');
+    
+    if(!req.body.msg){
+        res.status(400).send('Bad Request');
+    }else{
+        res.status(200).send('Hello World');
+        sockerService.getIO().emit('alertMsg', req.body.msg);
+    }
 })
 
 app.post('/api/submit', (req, res) => {
