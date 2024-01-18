@@ -1,0 +1,36 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+model User {
+  idNo String @id @default(uuid()) @map("id_no")
+  dob String @map("dob")
+  fistName String @map("first_name")
+  lastName String @map("last_name")
+  profileAppURL String @map("profile_app_url")
+  porfileGotURL String? @map("profile_got_url")
+  systems System[] @relation("assigned")
+  @@map("user")
+}
+
+
+model System {
+  labNo String @map("lab_no")
+  sysNo String @map("sys_no")
+  status String @map("status") @default("offline")
+  socketId String @map("socket_id")
+  assign User? @relation("assigned", fields: [assignId], references: [idNo])
+  assignId String? @map("user_id")
+
+  @@map("system")
+  @@id([labNo, sysNo])
+}
