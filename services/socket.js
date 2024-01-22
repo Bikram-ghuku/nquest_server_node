@@ -10,7 +10,6 @@ const offuser = {
     "exam_name": "ONLINE EXAM",
     "loginAllowed": false,
 }
-const db = new DbService()
 
 class SocketService {
     constructor(server) {
@@ -19,6 +18,7 @@ class SocketService {
                 origin: '*',
             }
         });
+        this.db = new DbService();
     }
     
     getIO() {
@@ -30,21 +30,21 @@ class SocketService {
         io.on('connection', (socket) => {
             console.log('a user connected', socket.id);
             socket.on('disconnect', () => {
-                console.log('user disconnected', socket.id);
+                this.db.getSystemBySocketId(socket.id).then((data) => {
+                    this.db.addUpdateSystem({sys_no: data.sysNo, lab_no: data.labNo, socket_id: "", status: "offline"}).then(() => {
+                        console.log("System offline: ", data.sysNo, " ,At lab: ", data.labNo);
+                    })  
+                })
             });
 
             socket.on("system_online", (data) => {
                 console.log("System online: ",data);
-                db.addUpdateSystem(data).then(() => {
+                this.db.addUpdateSystem({...data, status:"online"}).then(() => {
                     io.to(data.socket_id).emit("userData", offuser);
                     console.log("Sent data: ",data.socket_id);
                 });
                 
             });
-        });
-
-        io.on('disconnect', () => {
-            console.log('user disconnected', socket.id);
         });
         
         io.sockets.on("status" , (data) => {
