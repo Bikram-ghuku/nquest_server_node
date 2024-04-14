@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const userDataRoute = require('./routes/userDataRoute');
+const resColRoute = require('./routes/resColRoute')
 const http = require('http');
 const SocketService = require('./services/socket');
 
@@ -18,6 +19,8 @@ const sockerService = new SocketService(httpServer);
 sockerService.initListeners();
 
 app.use('/api', userDataRoute);
+app.use('/api', resColRoute)
+
 app.get('/api/', (req, res) => {
     
     if(!req.body.msg){
