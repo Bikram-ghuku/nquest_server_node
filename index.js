@@ -21,7 +21,7 @@ sockerService.initListeners();
 app.use('/api', userDataRoute);
 app.use('/api', resColRoute)
 
-app.get('/api/', (req, res) => {
+app.post('/api/', (req, res) => {
     
     if(!req.body.msg){
         res.status(400).send('Bad Request');
